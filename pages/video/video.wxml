@@ -1,0 +1,52 @@
+<!--pages/video/video.wxml-->
+<view class="videoContainer">
+  <!-- 头部 -->
+  <view class="header">
+    <image src="/static/images/video/video.jpg"></image>
+    <view class="search" bindtap="toSearch">搜索</view>
+    <image src="/static/images/logo.png"></image>
+  </view>
+  <!-- 导航区 -->
+  <scroll-view class="navScroll" scroll-x enable-flex scroll-into-view="{{'a'+navId}}" scroll-with-animation >
+    <view class="navItem" wx:for="{{videoGroupList}}" wx:key="id"  id="{{'a'+item.id}}">
+      <view class="navContent {{navId===item.id?'active':''}}" bindtap="selectNav" id="{{item.id}}">
+        {{item.name}}
+      </view>
+    </view>
+  </scroll-view>
+  <!-- 视频列表区域 -->
+  <scroll-view
+    class="videoScroll"
+    scroll-y
+    enable-flex
+    refresher-enabled
+    bindrefresherrefresh="handleRefresher"
+    refresher-triggered="{{isTriggered}}"
+    bindscrolltolower="handleToLower"
+  >
+    <view class="videoItem" wx:for="{{videoList}}" wx:key="id">
+      <video src="{{item.data.urlInfo.url}}" bindplay="handlePlay" id="{{item.data.vid}}" poster="{{item.data.coverUrl}}" class="cover" wx:if="{{videoId===item.data.vid}}" object-fit="fill" bindtimeupdate="handleTimeUpdate" bindended="handleEnded"></video>
+      <!-- 性能优化，image图片代替视频标签 -->
+      <image src="{{item.data.coverUrl}}" class="cover" bindtap="handlePlay" id="{{item.data.vid}}" wx:else></image>
+
+      <view class="content">{{item.data.title}}</view>
+      <view class="footer">
+        <image class="avatar" src="{{item.data.creator.avatarUrl}}"></image>
+        <text class="nickName">{{item.data.creator.nickname}}</text>
+        <view class="comments_praised">
+          <text class="item">
+            <text class="iconfont icon-xihuan"></text>
+            <text class="count">{{item.data.praisedCount}}</text>
+          </text>
+          <text class="item">
+            <text class="iconfont icon-pinglun"></text>
+            <text class="count">{{item.data.commentCount}}</text>
+          </text>
+          <button open-type="share" class="item btn" id="{{item.data.vid}}">
+            <text class="iconfont icon-gengduoxiao"></text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>
